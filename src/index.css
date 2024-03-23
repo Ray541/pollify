@@ -2,13 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font Famliy */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&family=Rokkitt:ital,wght@0,100..900;1,100..900&display=swap");
+/* font-family: "Roboto Slab", serif; */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto Slab", serif;
 }
 html,
 body {
   height: 100%;
   width: 100%;
+}
+
+::selection {
+  background-color: silver;
+  color: white;
+  text-shadow: 0px 0px 7px black;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  background-color: black;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 7px;
+  height: 20px;
+  background-color: #0088ff;
 }

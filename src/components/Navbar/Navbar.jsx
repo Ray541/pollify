@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import NavbarLogo from "../../assets/navbar-logo.png";
 import ProfileIcon from "../../assets/profile-icon.png";
 import { useState } from "react";
@@ -8,13 +8,13 @@ const Navbar = () => {
   const [isMobileMenu, setIsMobileMenu] = useState(false);
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-full sticky top-0 z-20">
       <nav className="bg-gray-800 py-0.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Link
+                <NavLink
                   to={"/"}
                   className="flex items-center justify-center gap-3 px-2 py-1 rounded-md sm:gap-2 focus:outline-none focus:bg-gray-600 sm:focus:bg-gray-700"
                 >
@@ -23,10 +23,10 @@ const Navbar = () => {
                     src={NavbarLogo}
                     alt="Pollify"
                   />
-                  <span className="text-white text-lg sm:text-3xl font-extrabold tracking-wide hover:text-[#0088FF] transition-all duration-300 ease-in-out">
+                  <span className="text-white text-lg sm:text-3xl font-black tracking-wide hover:text-[#0088FF] transition-all duration-300 ease-in-out">
                     Pollify
                   </span>
-                </Link>
+                </NavLink>
               </div>
 
               <div className="hidden md:block">
@@ -35,7 +35,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/"}
                     className={({ isActive }) =>
-                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none focus:bg-gray-700 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700" : ""
                       }`
                     }
@@ -46,12 +46,22 @@ const Navbar = () => {
                   <NavLink
                     to={"/feeds"}
                     className={({ isActive }) =>
-                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none focus:bg-gray-700 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700" : ""
                       }`
                     }
                   >
                     Feeds
+                  </NavLink>
+                  <NavLink
+                    to={"/about"}
+                    className={({ isActive }) =>
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                        isActive ? "bg-gray-700" : ""
+                      }`
+                    }
+                  >
+                    About
                   </NavLink>
                 </div>
               </div>
@@ -80,10 +90,10 @@ const Navbar = () => {
                     </button>
 
                     <div className="flex flex-col">
-                      <span className="text-white font-bold cursor-pointer text-sm tracking-wider">
+                      <span className="text-white font-normal cursor-pointer text-sm tracking-widest">
                         Username
                       </span>
-                      <span className="text-gray-400 font-bold hover:text-white cursor-pointer text-sm tracking-wider">
+                      <span className="text-[gray] font-normal hover:text-white cursor-pointer text-sm tracking-widest">
                         User Email
                       </span>
                     </div>
@@ -111,7 +121,7 @@ const Navbar = () => {
                       <NavLink
                         to={"/profile"}
                         className={({ isActive }) =>
-                          `block px-4 py-2 text-sm text-gray-700 focus:bg-gray-300 focus:outline-none hover:bg-gray-300 ${
+                          `block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200 ${
                             isActive ? "bg-gray-300" : ""
                           }`
                         }
@@ -125,7 +135,7 @@ const Navbar = () => {
                       <NavLink
                         to={"/signin"}
                         className={({ isActive }) =>
-                          `block px-4 py-2 text-sm text-gray-700 focus:bg-gray-300 focus:outline-none hover:bg-gray-300 ${
+                          `block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200 ${
                             isActive ? "bg-gray-300" : ""
                           }`
                         }
@@ -232,7 +242,7 @@ const Navbar = () => {
                     Username
                   </div>
                   <div className="text-sm font-medium leading-none text-gray-400">
-                    Username Email
+                    User Email
                   </div>
                 </div>
               </div>
