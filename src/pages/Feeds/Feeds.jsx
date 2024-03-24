@@ -5,9 +5,9 @@ const Feeds = () => {
 
   return (
     <section>
-      <div className="max-w-7xl mx-auto flex  items-center justify-center flex-col gap-7 py-10 lg:px-8">
-        <div className="w-full flex flex-wrap items-center justify-center gap-2 sticky top-[68px] sm:justify-around lg:justify-between bg-white lg:py-5 z-10">
-          <h1 className="text-4xl font-bold text-[#2b00ff] sm:text-[50px]">
+      <div className="max-w-7xl mx-auto flex  items-center justify-center flex-col gap-5 py-5 lg:px-8">
+        <div className="w-full flex flex-wrap items-center justify-center gap-2 sticky top-[68px] sm:justify-around lg:justify-between bg-white py-2 lg:py-3 z-10">
+          <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff] sm:text-[50px]">
             Feeds
           </h1>
           <input

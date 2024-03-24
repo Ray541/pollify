@@ -1,14 +1,30 @@
 import { NavLink } from "react-router-dom";
 import NavbarLogo from "../../assets/navbar-logo.png";
 import ProfileIcon from "../../assets/profile-icon.png";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const Navbar = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [isMobileMenu, setIsMobileMenu] = useState(false);
 
+  const dropDownRef = useRef(null);
+
+  useEffect(() => {
+    const handleProfileDropDown = (e) => {
+      if (dropDownRef.current && !dropDownRef.current.contains(e.target)) {
+        setIsProfile(false);
+      }
+    };
+
+    document.addEventListener("mouseup", handleProfileDropDown);
+
+    return () => {
+      document.removeEventListener("mouseup", handleProfileDropDown);
+    };
+  }, []);
+
   return (
-    <div className="min-h-full sticky top-0 z-20">
+    <div className="min-h-full sticky top-0 z-20" ref={dropDownRef}>
       <nav className="bg-gray-800 py-0.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -135,9 +151,7 @@ const Navbar = () => {
                       <NavLink
                         to={"/signin"}
                         className={({ isActive }) =>
-                          `block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200 ${
-                            isActive ? "bg-gray-300" : ""
-                          }`
+                          `block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200`
                         }
                         role="menuitem"
                         tabIndex="-1"
@@ -266,9 +280,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/signin"}
                     className={({ isActive }) =>
-                      `block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:bg-gray-700 ${
-                        isActive ? "bg-gray-700" : ""
-                      }`
+                      `block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:bg-gray-700 `
                     }
                     onClick={() => {
                       setIsMobileMenu(!isMobileMenu);

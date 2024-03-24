@@ -1,5 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import { Home, About, Feeds, Profile, Vote, Result } from "./pages";
+import {
+  SignIn,
+  SignUp,
+  ForgotPassword,
+  Home,
+  About,
+  Feeds,
+  Profile,
+  Vote,
+  Result,
+} from "./pages";
 import PageLayout from "./Layout/PageLayout";
 
 function App() {
@@ -8,6 +18,9 @@ function App() {
       <PageLayout>
         <Routes>
           <Route path="/" element={<Home />}></Route>
+          <Route path="/signin" element={<SignIn />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/forgot-password" element={<ForgotPassword />}></Route>
           <Route path="/feeds" element={<Feeds />}></Route>
           <Route path="/about" element={<About />}></Route>
           <Route path="/vote" element={<Vote />}></Route>
