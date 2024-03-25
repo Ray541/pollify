@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^10.9.0",
     "formik": "^2.4.5",
     "preline": "^2.0.3",
     "react": "^18.2.0",

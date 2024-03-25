@@ -1,10 +1,11 @@
 import React from "react";
-import Button from "../Button/Button";
 import { IoMdClose } from "react-icons/io";
 import { AiFillDelete } from "react-icons/ai";
 import { BiListPlus } from "react-icons/bi";
 import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { addDoc, collection } from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
 
 const CreateModal = ({ isOpen, onClose }) => {
   const initialValues = {
@@ -42,11 +43,29 @@ const CreateModal = ({ isOpen, onClose }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
+          onSubmit={async (values, { resetForm }) => {
             console.log(values);
+
+            const newPoll = {
+              question: values.question,
+              options: values.options,
+            };
+
+            try {
+              const newPollRef = await addDoc(
+                collection(firestore, "polls"),
+                newPoll
+              );
+
+              console.log(newPollRef);
+
+              resetForm();
+            } catch (error) {
+              console.log(error);
+            }
           }}
         >
-          {({ values, setValues }) => (
+          {({ values }) => (
             <Form className="flex flex-col items-center gap-4 md:px-8 lg:px-10">
               <div className="w-full">
                 <label htmlFor="question">Poll Question</label>
