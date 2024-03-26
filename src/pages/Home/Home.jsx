@@ -1,11 +1,14 @@
 import PollCard from "../../components/PollCard.jsx/PollCard";
 import Button from "../../components/Button/Button";
 import CreateModal from "../../components/Modal/CreateModal";
-import { useState } from "react";
+import { collection, doc, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { firestore } from "../../firebase/firebase";
 
 const Home = () => {
   const [searchPoll, setSearchPoll] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [polls, setPolls] = useState([]);
 
   const handleSearchChange = (e) => {
     setSearchPoll(e.target.value);
@@ -20,6 +23,26 @@ const Home = () => {
   const handleCreatePollClose = () => {
     setIsModalOpen(false);
   };
+
+  /**Fetch the polls form the firestore
+   * @returns all the polls
+   */
+  useEffect(() => {
+    const fetchPolls = async () => {
+      const querySnapShot = await getDocs(collection(firestore, "polls"));
+      const pollsData = querySnapShot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setPolls(pollsData);
+
+      querySnapShot.forEach((doc) => {
+        console.log(doc.data());
+      });
+    };
+
+    fetchPolls();
+  }, []);
 
   return (
     <>
@@ -47,18 +70,9 @@ const Home = () => {
           </div>
 
           <div className="w-full flex items-center justify-center gap-7 flex-wrap p-5">
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
-            <PollCard />
+            {polls.map((poll) => (
+              <PollCard key={poll.id} poll={poll} />
+            ))}
           </div>
         </div>
       </section>
