@@ -23,7 +23,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />}></Route>
           <Route path="/feeds" element={<Feeds />}></Route>
           <Route path="/about" element={<About />}></Route>
-          <Route path="/vote" element={<Vote />}></Route>
+          <Route path="/vote/:pollId" element={<Vote />}></Route>
           <Route path="/result" element={<Result />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
         </Routes>
