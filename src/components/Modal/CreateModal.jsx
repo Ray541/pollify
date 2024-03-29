@@ -46,7 +46,7 @@ const CreateModal = ({ isOpen, onClose }) => {
           onSubmit={async (values, { resetForm }) => {
             console.log(values);
 
-            const newPoll = {
+            const newPoll = { 
               question: values.question,
               options: values.options,
             };
