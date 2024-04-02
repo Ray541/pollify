@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5";
 import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -21,6 +21,8 @@ const SignIn = () => {
         .required("Password is required"),
     });
 
+  const navigate = useNavigate();
+
   return (
     <div className="w-full p-5 flex-col min-h-[100vh] flex items-center justify-center bg-gray-900">
       <Formik
@@ -29,8 +31,8 @@ const SignIn = () => {
         onSubmit={(values, { resetForm }) => {
           try {
             signInWithEmailAndPassword(auth, values.email, values.password)
-              .then((userCredentials) => {
-                alert("Login Successfull");
+              .then(() => {
+                navigate("/");
                 resetForm();
               })
               .catch((error) => {

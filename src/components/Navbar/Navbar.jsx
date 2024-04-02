@@ -1,7 +1,9 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import NavbarLogo from "../../assets/navbar-logo.png";
 import ProfileIcon from "../../assets/profile-icon.png";
 import { useRef, useState, useEffect } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
 
 const Navbar = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -22,6 +24,15 @@ const Navbar = () => {
       document.removeEventListener("mouseup", handleProfileDropDown);
     };
   }, []);
+
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut(auth).then(() => {
+      navigate("/signin");
+      setIsProfile(false);
+    });
+  };
 
   return (
     <div className="min-h-full sticky top-0 z-20" ref={dropDownRef}>
@@ -148,18 +159,15 @@ const Navbar = () => {
                       >
                         Profile
                       </NavLink>
-                      <NavLink
-                        to={"/signin"}
-                        className={({ isActive }) =>
-                          `block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200`
-                        }
+                      <span
+                        className={`block px-4 py-2 m-1.5 rounded tracking-wide text-sm text-gray-700 focus:bg-gray-900 focus:outline-none hover:bg-gray-800 hover:text-white text-[17px] transition-all duration-200 cursor-pointer`}
                         role="menuitem"
                         tabIndex="-1"
                         id="user-menu-item-0"
-                        onClick={() => setIsProfile(!isProfile)}
+                        onClick={handleSignOut}
                       >
                         Sign Out
-                      </NavLink>
+                      </span>
                     </div>
                   )}
                 </div>
@@ -277,18 +285,16 @@ const Navbar = () => {
                   >
                     Profile
                   </NavLink>
-                  <NavLink
-                    to={"/signin"}
-                    className={({ isActive }) =>
-                      `block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:bg-gray-700 `
-                    }
+                  <span
+                    className={`block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:bg-gray-700`}
                     onClick={() => {
                       setIsMobileMenu(!isMobileMenu);
                       setIsProfile(!isProfile);
+                      handleSignOut();
                     }}
                   >
                     Sign out
-                  </NavLink>
+                  </span>
                 </div>
               )}
             </div>

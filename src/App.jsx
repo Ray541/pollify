@@ -11,21 +11,60 @@ import {
   Result,
 } from "./pages";
 import PageLayout from "./Layout/PageLayout";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { auth } from "./firebase/firebase";
+import Spinner from "./components/Spinner/Spinner";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        setIsLoggedIn(true);
+      } else {
+        // User is signed out
+        setIsLoggedIn(false);
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (isLoading) {
+    /**Return loading state until authentication status is determined */
+    return <Spinner />;
+  }
+
   return (
     <>
       <PageLayout>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/signin" element={<SignIn />}></Route>
-          <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-          <Route path="/feeds" element={<Feeds />}></Route>
-          <Route path="/about" element={<About />}></Route>
-          <Route path="/vote/:pollId" element={<Vote />}></Route>
-          <Route path="/result" element={<Result />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/signin" element={!isLoggedIn ? <SignIn /> : <Home />} />
+          <Route path="/signup" element={!isLoggedIn ? <SignUp /> : <Home />} />
+          <Route
+            path="/forgot-password"
+            element={!isLoggedIn ? <ForgotPassword /> : <Home />}
+          />
+          <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
+          <Route path="/feeds" element={isLoggedIn ? <Feeds /> : <SignIn />} />
+          <Route path="/about" element={isLoggedIn ? <About /> : <SignIn />} />
+          <Route
+            path="/vote/:pollId"
+            element={isLoggedIn ? <Vote /> : <SignIn />}
+          />
+          <Route
+            path="/result"
+            element={isLoggedIn ? <Result /> : <SignIn />}
+          />
+          <Route
+            path="/profile"
+            element={isLoggedIn ? <Profile /> : <SignIn />}
+          />
         </Routes>
       </PageLayout>
     </>

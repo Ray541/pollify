@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa6";
-import { auth } from "../../firebase/firebase";
+import { auth, firestore } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const initialValues = {
     fullName: "",
     userName: "",
@@ -26,26 +28,27 @@ const SignUp = () => {
         .required("Password is required"),
     });
 
-  // const handleSignUp = (values, { resetForm }) => {
-  //   e.preventDefault();
-  //   createUserWithEmailAndPassword(auth, values.email, values.password)
-  //     .then((userCredentials) => {
-  //       console.log(userCredentials);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
   return (
     <div className="w-full p-5 flex-col min-h-[100vh] flex items-center justify-center bg-gray-900">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={async (values, { resetForm }) => {
+          const newUser = {
+            fullName: values.fullName,
+            userName: values.userName,
+            email: values.email,
+            password: values.password,
+          };
+
           try {
+            /**Creates a new collection in the firestore named users */
+            await addDoc(collection(firestore, "users"), newUser);
+
             createUserWithEmailAndPassword(auth, values.email, values.password)
-              .then((userCredentials) => {
-                console.log(userCredentials);
+              .then(() => {
                 alert("Account Created Successfully");
+                navigate("/signin");
               })
               .catch((error) => alert(error));
             resetForm();
