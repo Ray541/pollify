@@ -16,10 +16,12 @@ const PollCard = ({ poll }) => {
             {option}
           </li>
         ))}
-        <li className="tracking-wide w-full bg-black px-2 py-1 rounded-md text-gray-200">
-          created By
-        </li>
       </ul>
+      <div className="bg-black rounded-md text-gray-200 w-full">
+        <span className="px-2 py-1 flex items-center justify-center flex-wrap">
+          {poll.createdBy}
+        </span>
+      </div>
       <div className="flex justify-around items-center sm:justify- md:justify-around lg:justify-around">
         <Link
           to={`/vote/${poll.id}`}

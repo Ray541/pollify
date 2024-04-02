@@ -1,16 +1,31 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { AiFillDelete } from "react-icons/ai";
 import { BiListPlus } from "react-icons/bi";
 import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { addDoc, collection } from "firebase/firestore";
-import { firestore } from "../../firebase/firebase";
+import { firestore, auth } from "../../firebase/firebase";
 
 const CreateModal = ({ isOpen, onClose }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const initialValues = {
     question: "",
-    options: ["", ""], // Two options by default
+    options: ["", ""],
+    createdBy: "", // Two options by default
   };
 
   const validationSchema = Yup.object({
@@ -46,9 +61,10 @@ const CreateModal = ({ isOpen, onClose }) => {
           onSubmit={async (values, { resetForm }) => {
             console.log(values);
 
-            const newPoll = { 
+            const newPoll = {
               question: values.question,
               options: values.options,
+              createdBy: currentUser.uid,
             };
 
             try {
