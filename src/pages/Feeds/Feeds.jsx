@@ -1,7 +1,38 @@
+import { useEffect, useState } from "react";
 import PollCard from "../../components/PollCard.jsx/PollCard";
+import { collection, getDocs } from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
 
 const Feeds = () => {
-  const handleSearchChange = () => {};
+  const [searchPoll, setSearchPoll] = useState("");
+  const [polls, setPolls] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const handleSearchChange = (e) => {
+    setSearchPoll(e.target.value);
+  };
+
+  /**Fetch the polls form the firestore
+   * @returns all the polls
+   */
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const querySnapShot = await getDocs(collection(firestore, "polls"));
+        const pollsData = querySnapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setPolls(pollsData);
+        setLoading(false); // Set loading to false when polls are fetched
+      } catch (error) {
+        console.error("Error fetching polls:", error);
+        setLoading(false); // Set loading to false in case of error
+      }
+    };
+
+    fetchPolls();
+  }, []);
 
   return (
     <section>
@@ -16,23 +47,21 @@ const Feeds = () => {
             type="text"
             name="feeds-search"
             id="feeds-search"
+            value={searchPoll}
             onChange={() => handleSearchChange}
           />
         </div>
 
         <div className="w-full flex items-center justify-center gap-7 flex-wrap p-5">
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
-          <PollCard />
+          {loading ? (
+            <Spinner /> // Display spinner component while loading
+          ) : (
+            polls.map((poll) => <PollCard key={poll.id} poll={poll} />)
+          )}
+
+          {/* {polls.map((poll) => (
+            <PollCard key={poll.id} poll={poll} />
+          ))} */}
         </div>
       </div>
     </section>
@@ -40,3 +69,29 @@ const Feeds = () => {
 };
 
 export default Feeds;
+
+const Spinner = () => {
+  return (
+    <div className="flex justify-center flex-col items-center gap-3 w-full h-full bg-white">
+      <div
+        className={`animate-spin rounded-full h-20 w-20 md:h-25 md:w-25 lg:h-32 lg:w-32 border-t-2 border-b-2 border-gray-900`}
+      >
+        <style>{spinnerStyles}</style>
+      </div>
+      <h1 className="text-3xl tracking-wider font-bold">Fetching Polls</h1>
+    </div>
+  );
+};
+
+// CSS for Spinner component animation
+const spinnerStyles = `
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+`;
