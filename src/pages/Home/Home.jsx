@@ -1,7 +1,7 @@
 import PollCard from "../../components/PollCard.jsx/PollCard";
 import Button from "../../components/Button/Button";
 import CreateModal from "../../components/Modal/CreateModal";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase/firebase";
 import SnackBar from "../../components/SnackBar/SnackBar";
@@ -35,29 +35,32 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
+  const currentUserData = JSON.parse(localStorage.getItem("currentUserData"));
+  const currentUserId = currentUserData ? currentUserData.uid : null;
   /**Fetch the polls form the firestore
-   * @returns all the polls
+   * @returns all the polls that the currentUser have created
    */
   useEffect(() => {
     const fetchPolls = async () => {
-      const unsubscribe = onSnapshot(
+      const q = query(
         collection(firestore, "polls"),
-        (snapshot) => {
-          const pollsData = snapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }));
-          setPolls(pollsData);
-          setLoading(false);
-        }
+        where("creatorId", "==", currentUserId)
       );
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const pollsData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setPolls(pollsData);
+        setLoading(false);
+      });
 
       // Cleanup function to unsubscribe from the listener when the component unmounts
       return () => unsubscribe();
     };
 
     fetchPolls();
-  }, []);
+  }, [currentUserId]);
 
   return (
     <>
