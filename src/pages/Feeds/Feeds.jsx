@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PollCard from "../../components/PollCard.jsx/PollCard";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 const Feeds = () => {
@@ -17,18 +17,20 @@ const Feeds = () => {
    */
   useEffect(() => {
     const fetchPolls = async () => {
-      try {
-        const querySnapShot = await getDocs(collection(firestore, "polls"));
-        const pollsData = querySnapShot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setPolls(pollsData);
-        setLoading(false); // Set loading to false when polls are fetched
-      } catch (error) {
-        console.error("Error fetching polls:", error);
-        setLoading(false); // Set loading to false in case of error
-      }
+      const unsubscribe = onSnapshot(
+        collection(firestore, "polls"),
+        (snapshot) => {
+          const pollsData = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setPolls(pollsData);
+          setLoading(false);
+        }
+      );
+
+      // Cleanup function to unsubscribe from the listener when the component unmounts
+      return () => unsubscribe();
     };
 
     fetchPolls();

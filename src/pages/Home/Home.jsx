@@ -1,15 +1,26 @@
 import PollCard from "../../components/PollCard.jsx/PollCard";
 import Button from "../../components/Button/Button";
 import CreateModal from "../../components/Modal/CreateModal";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase/firebase";
+import SnackBar from "../../components/SnackBar/SnackBar";
 
 const Home = () => {
   const [searchPoll, setSearchPoll] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
+
+  const showSnackbar = () => {
+    setIsSnackbarVisible(true);
+    setTimeout(() => setIsSnackbarVisible(false), 3000); // Hide after 3 seconds
+  };
+
+  const hideSnackbar = () => {
+    setIsSnackbarVisible(false);
+  };
 
   const handleSearchChange = (e) => {
     setSearchPoll(e.target.value);
@@ -17,7 +28,6 @@ const Home = () => {
 
   const handleCreatePole = (e) => {
     e.preventDefault();
-    console.log("Poll Created");
     setIsModalOpen(true);
   };
 
@@ -30,14 +40,20 @@ const Home = () => {
    */
   useEffect(() => {
     const fetchPolls = async () => {
-      const querySnapShot = await getDocs(collection(firestore, "polls"));
-      const pollsData = querySnapShot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setPolls(pollsData); //set all the fetched polls in the state variable polls
+      const unsubscribe = onSnapshot(
+        collection(firestore, "polls"),
+        (snapshot) => {
+          const pollsData = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setPolls(pollsData);
+          setLoading(false);
+        }
+      );
 
-      setLoading(false); // Set loading to false when polls are fetched
+      // Cleanup function to unsubscribe from the listener when the component unmounts
+      return () => unsubscribe();
     };
 
     fetchPolls();
@@ -61,6 +77,12 @@ const Home = () => {
               onChange={handleSearchChange}
             />
 
+            {isSnackbarVisible && (
+              <SnackBar
+                value="Poll created successfully!"
+                onClose={hideSnackbar}
+              />
+            )}
             <Button
               className="py-2 px-4 tracking-wider"
               value={"Create Poll"}
@@ -80,7 +102,11 @@ const Home = () => {
 
       {/* Create Poll Modal */}
 
-      <CreateModal isOpen={isModalOpen} onClose={handleCreatePollClose} />
+      <CreateModal
+        isOpen={isModalOpen}
+        onClose={handleCreatePollClose}
+        onPollCreated={showSnackbar}
+      />
     </>
   );
 };

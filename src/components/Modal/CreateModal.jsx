@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { addDoc, collection } from "firebase/firestore";
 import { firestore, auth } from "../../firebase/firebase";
 
-const CreateModal = ({ isOpen, onClose }) => {
+const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const CreateModal = ({ isOpen, onClose }) => {
   const initialValues = {
     question: "",
     options: ["", ""], // Two options by default
+    createdAt: "",
     creatorId: "",
     createdBy: "",
   };
@@ -60,8 +61,6 @@ const CreateModal = ({ isOpen, onClose }) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
-            console.log(values);
-
             const currentUserData = JSON.parse(
               localStorage.getItem("currentUserData")
             );
@@ -71,19 +70,16 @@ const CreateModal = ({ isOpen, onClose }) => {
             const newPoll = {
               question: values.question,
               options: values.options,
+              createdAt: new Date(),
               creatorId: currentUser.uid,
               createdBy: pollCreatorUserName,
             };
 
             try {
-              const newPollRef = await addDoc(
-                collection(firestore, "polls"),
-                newPoll
-              );
-
-              console.log(newPollRef);
-
+              await addDoc(collection(firestore, "polls"), newPoll);
               resetForm();
+              onPollCreated();
+              onClose();
             } catch (error) {
               console.log(error);
             }
