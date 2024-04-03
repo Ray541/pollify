@@ -34,23 +34,35 @@ const SignUp = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
-          const newUser = {
-            fullName: values.fullName,
-            userName: values.userName,
-            email: values.email,
-            password: values.password,
-          };
-
           try {
-            /**Creates a new collection in the firestore named users */
+            // Create the user in Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(
+              auth,
+              values.email,
+              values.password
+            );
+
+            // Get the user's uid
+            const { uid } = userCredential.user;
+
+            // Create a new user object with uid
+            const newUser = {
+              uid: uid,
+              fullName: values.fullName,
+              userName: values.userName,
+              email: values.email,
+            };
+
+            localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+            // Add the new user to Firestore collection 'users'
             await addDoc(collection(firestore, "users"), newUser);
 
-            createUserWithEmailAndPassword(auth, values.email, values.password)
-              .then(() => {
-                alert("Account Created Successfully");
-                navigate("/signin");
-              })
-              .catch((error) => alert(error));
+            // Show success message and navigate to sign in page
+            alert("Account Created Successfully");
+            navigate("/signin");
+
+            // Reset form fields
             resetForm();
           } catch (error) {
             alert(error.message);

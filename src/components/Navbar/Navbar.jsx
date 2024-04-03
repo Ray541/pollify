@@ -29,6 +29,8 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await signOut(auth).then(() => {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("currentUserData");
       navigate("/signin");
       setIsProfile(false);
     });

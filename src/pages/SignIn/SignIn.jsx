@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5";
-import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { auth, firestore } from "../../firebase/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
@@ -21,22 +24,59 @@ const SignIn = () => {
         .required("Password is required"),
     });
 
-  const navigate = useNavigate();
-
   return (
     <div className="w-full p-5 flex-col min-h-[100vh] flex items-center justify-center bg-gray-900">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={async (values, { resetForm }) => {
           try {
-            signInWithEmailAndPassword(auth, values.email, values.password)
-              .then(() => {
-                navigate("/");
-                resetForm();
+            /**Sign In using firebase sign in function
+             * it returns object and is stored in the user variable
+             * Why? ---> as I have a different collection named users which contains all the user data
+             * to access the currentUsers data I have stored the user data in user variable
+             */
+            const { user } = await signInWithEmailAndPassword(
+              auth,
+              values.email,
+              values.password
+            );
+
+            /**Stores the user data comming from the default signin function and authentication table of firebase
+             * Navigate to Home Page
+             */
+            if (user) {
+              localStorage.setItem("currentUser", JSON.stringify(user));
+              navigate("/");
+              resetForm();
+            }
+
+            const userId = user.uid;
+
+            /**This is used to fetch the data from the firestore collection names users
+             * Here, the uid in the users collection is compared with the user.uid which we get from the default authentication table in the firebase
+             */
+            const q = query(
+              collection(firestore, "users"),
+              where("uid", "==", userId)
+            );
+
+            /**If the collection with the user.uid exists then the user data from the firestore users collection is stored in localStorage */
+            getDocs(q)
+              .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                  const snapshot = querySnapshot.docs[0];
+
+                  localStorage.setItem(
+                    "currentUserData",
+                    JSON.stringify(snapshot.data())
+                  );
+                } else {
+                  console.log("No documents found matching the query.");
+                }
               })
               .catch((error) => {
-                alert(error);
+                console.error("Error getting documents: ", error);
               });
           } catch (error) {
             alert(error.message);
