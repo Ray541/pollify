@@ -35,7 +35,7 @@ const PollCard = ({ poll }) => {
           Vote
         </Link>
         <Link
-          to={"/result"}
+          to={`/result/${poll.id}`}
           className="px-8 py-1 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 text-lg tracking-wide font-light"
         >
           Result

@@ -58,7 +58,7 @@ function App() {
             element={isLoggedIn ? <Vote /> : <SignIn />}
           />
           <Route
-            path="/result"
+            path="/result/:pollId"
             element={isLoggedIn ? <Result /> : <SignIn />}
           />
           <Route
