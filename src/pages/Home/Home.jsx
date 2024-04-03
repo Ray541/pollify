@@ -9,6 +9,7 @@ const Home = () => {
   const [searchPoll, setSearchPoll] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [polls, setPolls] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleSearchChange = (e) => {
     setSearchPoll(e.target.value);
@@ -34,11 +35,9 @@ const Home = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      setPolls(pollsData);
+      setPolls(pollsData); //set all the fetched polls in the state variable polls
 
-      querySnapShot.forEach((doc) => {
-        console.log(doc.data());
-      });
+      setLoading(false); // Set loading to false when polls are fetched
     };
 
     fetchPolls();
@@ -70,9 +69,11 @@ const Home = () => {
           </div>
 
           <div className="w-full flex items-center justify-center gap-7 flex-wrap p-5">
-            {polls.map((poll) => (
-              <PollCard key={poll.id} poll={poll} />
-            ))}
+            {loading ? (
+              <Spinner /> // Display spinner component while loading
+            ) : (
+              polls.map((poll) => <PollCard key={poll.id} poll={poll} />)
+            )}
           </div>
         </div>
       </section>
@@ -85,3 +86,29 @@ const Home = () => {
 };
 
 export default Home;
+
+const Spinner = () => {
+  return (
+    <div className="flex justify-center flex-col items-center gap-3 w-full h-full bg-white">
+      <div
+        className={`animate-spin rounded-full h-20 w-20 md:h-25 md:w-25 lg:h-32 lg:w-32 border-t-2 border-b-2 border-gray-900`}
+      >
+        <style>{spinnerStyles}</style>
+      </div>
+      <h1 className="text-3xl tracking-wider font-bold">Fetching Polls</h1>
+    </div>
+  );
+};
+
+// CSS for Spinner component animation
+const spinnerStyles = `
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+`;
