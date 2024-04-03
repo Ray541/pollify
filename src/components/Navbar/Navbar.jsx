@@ -38,8 +38,9 @@ const Navbar = () => {
 
   const currentUserData = JSON.parse(localStorage.getItem("currentUserData"));
 
-  const currentUserUsername = currentUserData.userName;
-  const currentUserEmail = currentUserData.email;
+  const currentUserUsername = currentUserData?.userName;
+  const currentUserFullname = currentUserData?.fullName;
+  const currentUserEmail = currentUserData?.email;
 
   return (
     <div className="min-h-full sticky top-0 z-20" ref={dropDownRef}>
@@ -125,6 +126,7 @@ const Navbar = () => {
 
                     <div className="flex flex-col">
                       <span className="text-white font-normal cursor-pointer text-sm tracking-widest">
+                        {currentUserFullname ? currentUserFullname + " | " : ""}
                         {currentUserUsername ? currentUserUsername : ""}
                       </span>
                       <span className="text-[gray] font-normal hover:text-white cursor-pointer text-sm tracking-widest">
@@ -267,11 +269,12 @@ const Navbar = () => {
                   <img className="h-10 w-10" src={ProfileIcon} alt="" />
                 </div>
                 <div className="ml-3 flex flex-col gap-1.5">
-                  <div className="text-base font-medium leading-none text-white">
-                    {currentUserUsername ? currentUserUsername : ""}
-                  </div>
-                  <div className="text-sm font-medium leading-none text-gray-400">
-                    {currentUserEmail ? currentUserEmail : ""}
+                  <div className="flex flex-col gap-0.5 text-base font-medium leading-none text-white">
+                    <span>
+                      {currentUserFullname ? currentUserFullname + " | " : ""}
+                      {currentUserUsername ? currentUserUsername : ""}
+                    </span>
+                    <span>{currentUserEmail ? currentUserEmail : ""}</span>
                   </div>
                 </div>
               </div>
