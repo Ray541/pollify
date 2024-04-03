@@ -24,8 +24,9 @@ const CreateModal = ({ isOpen, onClose }) => {
 
   const initialValues = {
     question: "",
-    options: ["", ""],
-    createdBy: "", // Two options by default
+    options: ["", ""], // Two options by default
+    creatorId: "",
+    createdBy: "",
   };
 
   const validationSchema = Yup.object({
@@ -61,10 +62,17 @@ const CreateModal = ({ isOpen, onClose }) => {
           onSubmit={async (values, { resetForm }) => {
             console.log(values);
 
+            const currentUserData = JSON.parse(
+              localStorage.getItem("currentUserData")
+            );
+
+            const pollCreatorUserName = currentUserData.userName;
+
             const newPoll = {
               question: values.question,
               options: values.options,
-              createdBy: currentUser.uid,
+              creatorId: currentUser.uid,
+              createdBy: pollCreatorUserName,
             };
 
             try {
