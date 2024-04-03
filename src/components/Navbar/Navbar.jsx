@@ -3,7 +3,14 @@ import NavbarLogo from "../../assets/navbar-logo.png";
 import ProfileIcon from "../../assets/profile-icon.png";
 import { useRef, useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebase";
+import { auth, firestore } from "../../firebase/firebase";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 
 const Navbar = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -36,11 +43,27 @@ const Navbar = () => {
     });
   };
 
-  const currentUserData = JSON.parse(localStorage.getItem("currentUserData"));
+  const currentUserData = JSON.parse(localStorage.getItem("currentUser"));
 
-  const currentUserUsername = currentUserData?.userName;
-  const currentUserFullname = currentUserData?.fullName;
   const currentUserEmail = currentUserData?.email;
+
+  const [userDetails, setUserDetails] = useState(null);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const q = query(
+        collection(firestore, "users"),
+        where("email", "==", currentUserEmail)
+      );
+
+      const userData = await getDocs(q);
+
+      userData.forEach((userInfo) => {
+        setUserDetails(userInfo.data());
+      });
+    };
+
+    fetchUserDetails();
+  }, []);
 
   return (
     <div className="min-h-full sticky top-0 z-20" ref={dropDownRef}>
@@ -126,8 +149,10 @@ const Navbar = () => {
 
                     <div className="flex flex-col">
                       <span className="text-white font-normal cursor-pointer text-sm tracking-widest">
-                        {currentUserFullname ? currentUserFullname + " | " : ""}
-                        {currentUserUsername ? currentUserUsername : ""}
+                        {userDetails?.fullName
+                          ? userDetails?.fullName + " | "
+                          : "Loading..."}
+                        {userDetails?.userName ? userDetails?.userName : ""}
                       </span>
                       <span className="text-[gray] font-normal hover:text-white cursor-pointer text-sm tracking-widest">
                         {currentUserEmail ? currentUserEmail : ""}
@@ -271,8 +296,10 @@ const Navbar = () => {
                 <div className="ml-3 flex flex-col gap-1.5">
                   <div className="flex flex-col gap-0.5 text-base font-medium leading-none text-white">
                     <span>
-                      {currentUserFullname ? currentUserFullname + " | " : ""}
-                      {currentUserUsername ? currentUserUsername : ""}
+                      {userDetails?.fullName
+                        ? userDetails?.fullName + " | "
+                        : "Loading..."}
+                      {userDetails?.userName ? userDetails?.userName : ""}
                     </span>
                     <span>{currentUserEmail ? currentUserEmail : ""}</span>
                   </div>
