@@ -38,6 +38,49 @@ const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
       .max(4, "No more than 4 options allowed"),
   });
 
+  const handleFormSubmit = async (values, { resetForm }) => {
+    const currentUserData = JSON.parse(localStorage.getItem("currentUserData"));
+
+    const pollCreatorUserName = currentUserData.userName;
+
+    const newPoll = {
+      question: values.question,
+      options: values.options,
+      createdAt: new Date(),
+      creatorId: currentUser.uid,
+      createdBy: pollCreatorUserName,
+    };
+
+    try {
+      // Add the poll to the "polls" collection
+      const pollDocRef = await addDoc(collection(firestore, "polls"), newPoll);
+
+      // Create an array to store option promises
+      const optionPromises = [];
+
+      // For each option, create a document in the "options" collection
+      values.options.forEach((option) => {
+        const newOption = {
+          pollId: pollDocRef.id, // Use the ID of the created poll
+          option: option,
+        };
+        const optionPromise = addDoc(
+          collection(firestore, "options"),
+          newOption
+        );
+        optionPromises.push(optionPromise);
+      });
+
+      // Wait for all option documents to be created
+      await Promise.all(optionPromises);
+      resetForm();
+      onPollCreated();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -60,30 +103,7 @@ const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {
-            const currentUserData = JSON.parse(
-              localStorage.getItem("currentUserData")
-            );
-
-            const pollCreatorUserName = currentUserData.userName;
-
-            const newPoll = {
-              question: values.question,
-              options: values.options,
-              createdAt: new Date(),
-              creatorId: currentUser.uid,
-              createdBy: pollCreatorUserName,
-            };
-
-            try {
-              await addDoc(collection(firestore, "polls"), newPoll);
-              resetForm();
-              onPollCreated();
-              onClose();
-            } catch (error) {
-              console.log(error);
-            }
-          }}
+          onSubmit={handleFormSubmit}
         >
           {({ values }) => (
             <Form className="flex flex-col items-center gap-4 md:px-8 lg:px-10">
