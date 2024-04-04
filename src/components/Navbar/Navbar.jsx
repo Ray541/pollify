@@ -32,6 +32,12 @@ const Navbar = () => {
     await signOut(auth).then(() => {
       localStorage.removeItem("currentUser");
       localStorage.removeItem("currentUserData");
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("votedOption-")) {
+          localStorage.removeItem(key);
+        }
+      }
       navigate("/signin");
       setIsProfile(false);
     });

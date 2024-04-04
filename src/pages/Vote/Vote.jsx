@@ -1,13 +1,27 @@
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import SnackBar from "../../components/SnackBar/SnackBar";
 
 const Vote = () => {
   const { pollId } = useParams();
   const [poll, setPoll] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
+  const [currentUserVotedOption, setCurrentUserVotedOption] = useState(null);
+  const [voted, setVoted] = useState(true);
 
   useEffect(() => {
     const fetchPoll = async () => {
@@ -15,7 +29,33 @@ const Vote = () => {
       const pollDoc = await getDoc(pollRef);
 
       if (pollDoc.exists()) {
-        setPoll({ id: pollDoc.id, ...pollDoc.data() });
+        const pollData = pollDoc.data();
+        const currentUserData = JSON.parse(
+          localStorage.getItem("currentUserData")
+        );
+        const userId = currentUserData?.uid;
+
+        // Check if the user has already voted in the poll
+        const votesQuery = query(
+          collection(firestore, "votes"),
+          where("pollId", "==", pollId),
+          where("userId", "==", userId)
+        );
+
+        const votesSnapshot = await getDocs(votesQuery);
+        let votedOption = null;
+
+        if (!votesSnapshot.empty) {
+          // The user has voted, get the voted option
+          votedOption = votesSnapshot.docs[0].data().optionText;
+        }
+
+        setPoll({
+          id: pollDoc.id,
+          ...pollData,
+          votedOption,
+        });
+        setCurrentUserVotedOption(votedOption);
         setLoading(false);
       } else {
         console.log("No Such Poll Created");
@@ -25,10 +65,138 @@ const Vote = () => {
     fetchPoll();
   }, [pollId]);
 
-  const handleVoting = () => {};
+  const handleVoting = async (optionText) => {
+    try {
+      // Query for "options" collection to find the option with the matching text
+      const optionsQuery = query(
+        collection(firestore, "options"),
+        where("option", "==", optionText)
+      );
+
+      const optionsSnapshot = await getDocs(optionsQuery);
+
+      // Check if the option exists
+      if (!optionsSnapshot.empty) {
+        // Get the option ID from the first document in the snapshot
+        const optionId = optionsSnapshot.docs[0].id;
+
+        const currentUserData = JSON.parse(
+          localStorage.getItem("currentUserData")
+        );
+
+        const userId = currentUserData.uid;
+        const userEmail = currentUserData.email;
+        const userName = currentUserData.userName;
+
+        // Query for "votes" collection to find the document associated to the user's vote for the current poll
+        const votesQuery = query(
+          collection(firestore, "votes"),
+          where("pollId", "==", pollId),
+          where("userId", "==", userId)
+        );
+
+        const votesSnapshot = await getDocs(votesQuery);
+
+        // Check if the user has already voted for the current poll
+        if (!votesSnapshot.empty) {
+          // Get the ID of the first document in the snapshot
+          const voteId = votesSnapshot.docs[0].id;
+
+          // Update the document in the "votes" collection with the new option selected by the user
+          await setDoc(doc(firestore, "votes", voteId), {
+            pollId,
+            optionId: optionId,
+            optionText: optionText,
+            userId,
+            userEmail,
+            userName,
+            voted: true,
+          });
+
+          setIsSnackbarVisible(true);
+          setTimeout(() => {
+            setIsSnackbarVisible(false);
+          }, 3000);
+
+          // Update the state to mark the option as voted
+          setPoll((prevState) => ({
+            ...prevState,
+            votedOption: optionText,
+          }));
+
+          setCurrentUserVotedOption(optionText);
+
+          // Store the voted option in local storage
+          localStorage.setItem(
+            `votedOption-${pollId}`,
+            JSON.stringify(optionText)
+          );
+        } else {
+          // If the user has not voted for the current poll yet, add a new document to the "votes" collection
+          await addDoc(collection(firestore, "votes"), {
+            pollId,
+            optionId: optionId,
+            optionText: optionText,
+            userId,
+            userEmail,
+            userName,
+            voted: true,
+          });
+
+          setIsSnackbarVisible(true);
+          setTimeout(() => {
+            setIsSnackbarVisible(false);
+          }, 3000);
+
+          // Update the state to mark the option as voted
+          setPoll((prevState) => ({
+            ...prevState,
+            votedOption: optionText,
+          }));
+
+          setCurrentUserVotedOption(optionText);
+
+          // Store the voted option in local storage
+          localStorage.setItem(
+            `votedOption-${pollId}`,
+            JSON.stringify(optionText)
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error voting:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchVotes = () => {
+      const votesQuery = query(
+        collection(firestore, "votes"),
+        where("voted", "==", true)
+      );
+
+      const unsubscribe = onSnapshot(votesQuery, (snapshot) => {
+        snapshot.forEach((change) => {
+          console.log(change.data());
+          setVoted(true);
+        });
+      });
+
+      return () => unsubscribe();
+    };
+
+    fetchVotes();
+  }, []);
 
   return (
     <section className="w-full min-h-[90vh] p-3 flex flex-col items-center justify-center gap-5">
+      {isSnackbarVisible && (
+        <SnackBar
+          className={"absolute bottom-5"}
+          value="Voted successfully!"
+          onClose={() => setIsSnackbarVisible(false)}
+        />
+      )}
       {loading ? (
         <Spinner />
       ) : (
@@ -68,12 +236,19 @@ const Vote = () => {
                 </h1>
                 <div className="flex flex-col items-start justify-start gap-3">
                   {poll.options.map((option, index) => (
-                    <Button
-                      key={index}
-                      className={"px-3"}
-                      value={option}
-                      onClick={handleVoting}
-                    />
+                    <div key={index}>
+                      {currentUserVotedOption === option && voted === true ? (
+                        <p>You have voted for {option}</p>
+                      ) : (
+                        <Button
+                          className={
+                            "px-5 py-2 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none"
+                          }
+                          value={option}
+                          onClick={() => handleVoting(option)}
+                        />
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
