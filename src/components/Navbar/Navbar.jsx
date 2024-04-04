@@ -4,13 +4,7 @@ import ProfileIcon from "../../assets/profile-icon.png";
 import { useRef, useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth, firestore } from "../../firebase/firebase";
-import {
-  collection,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const Navbar = () => {
   const [isProfile, setIsProfile] = useState(false);
