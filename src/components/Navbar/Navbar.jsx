@@ -4,7 +4,7 @@ import ProfileIcon from "../../assets/profile-icon.png";
 import { useRef, useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth, firestore } from "../../firebase/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 const Navbar = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -49,11 +49,14 @@ const Navbar = () => {
         where("email", "==", currentUserEmail)
       );
 
-      const userData = await getDocs(q);
-
-      userData.forEach((userInfo) => {
-        setUserDetails(userInfo.data());
+      /**Real Time Data Fetching  */
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setUserDetails(doc.data());
+        });
       });
+
+      return () => unsubscribe();
     };
 
     fetchUserDetails();
