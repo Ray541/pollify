@@ -94,14 +94,16 @@ const Profile = () => {
         <>
           <h1 className="text-4xl md:text-5xl lg:text-6xl">User Profile</h1>
           <form
-            className="border-2 border-gray-900 p-2 flex flex-col gap-2 w-full md:w-1/2 lg:w-1/3"
+            className="border-2 border-gray-900 shadow-xl shadow-gray-400 p-5 flex flex-col gap-2 w-full md:w-1/2 lg:w-1/3"
             onSubmit={handleFormSubmit}
           >
             <div>
-              <label htmlFor="fullName">Full Name</label>
+              <label className="text-xl " htmlFor="fullName">
+                Full Name
+              </label>
               <input
                 id="fullName"
-                className="w-full p-1 text-gray-900 border-[silver] mt-1 rounded-sm focus:outline-none border-2 border-transparent focus:border-2 focus:border-gray-900"
+                className="tracking-wide text-[17px] w-full p-1 text-gray-900 border-gray-400 mt-1 focus:outline-none border-2 focus:border-2 focus:border-gray-900"
                 type="text"
                 name="fullName"
                 placeholder="Enter Full Name"
@@ -109,24 +111,28 @@ const Profile = () => {
               />
             </div>
             <div>
-              <label htmlFor="userName">Username</label>
+              <label className="text-xl " htmlFor="userName">
+                Username
+              </label>
               <input
                 id="userName"
-                className="w-full p-1 text-gray-900 border-[silver] mt-1 rounded-sm focus:outline-none border-2 border-transparent focus:border-2 focus:border-gray-900"
+                className="tracking-wide text-[17px] w-full p-1 text-gray-900 border-gray-400 mt-1 focus:outline-none border-2 focus:border-2 focus:border-gray-900"
                 type="text"
                 name="userName"
                 placeholder="Enter User Name"
                 defaultValue={userPrevData.userName}
               />
             </div>
-            <label>Id: {userPrevData.uid}</label>
-            <label>Email: {userPrevData.email}</label>
-            <button
-              className={`py-1 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none mt-3`}
-              type="submit"
-            >
-              Edit Profile
-            </button>
+            <label className="text-xl ">Id: {userPrevData.uid}</label>
+            <label className="text-xl ">Email: {userPrevData.email}</label>
+            <div className="text-xl w-full">
+              <button
+                className={`px-5 py-2 w-full cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none mt-3`}
+                type="submit"
+              >
+                Edit Profile
+              </button>
+            </div>
           </form>
         </>
       )}
