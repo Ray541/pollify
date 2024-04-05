@@ -4,11 +4,12 @@ import {
   SignUp,
   ForgotPassword,
   Home,
-  About,
   Feeds,
+  VotedPolls,
   Profile,
   Vote,
   Result,
+  About,
 } from "./pages";
 import PageLayout from "./Layout/PageLayout";
 import { onAuthStateChanged } from "firebase/auth";
@@ -52,6 +53,10 @@ function App() {
           />
           <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
           <Route path="/feeds" element={isLoggedIn ? <Feeds /> : <SignIn />} />
+          <Route
+            path="/votedpolls"
+            element={isLoggedIn ? <VotedPolls /> : <SignIn />}
+          />
           <Route path="/about" element={isLoggedIn ? <About /> : <SignIn />} />
           <Route
             path="/vote/:pollId"

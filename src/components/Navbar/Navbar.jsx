@@ -96,8 +96,8 @@ const Navbar = () => {
                   <NavLink
                     to={"/"}
                     className={({ isActive }) =>
-                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
-                        isActive ? "bg-gray-700" : ""
+                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                        isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
                     aria-current="page"
@@ -107,18 +107,28 @@ const Navbar = () => {
                   <NavLink
                     to={"/feeds"}
                     className={({ isActive }) =>
-                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
-                        isActive ? "bg-gray-700" : ""
+                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                        isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
                   >
                     Feeds
                   </NavLink>
                   <NavLink
+                    to={"/votedpolls"}
+                    className={({ isActive }) =>
+                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                        isActive ? "bg-gray-700 hover:bg-gray-700" : ""
+                      }`
+                    }
+                  >
+                    Voted
+                  </NavLink>
+                  <NavLink
                     to={"/about"}
                     className={({ isActive }) =>
-                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
-                        isActive ? "bg-gray-700" : ""
+                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                        isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
                   >
@@ -285,6 +295,28 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenu(!isMobileMenu)}
               >
                 Feeds
+              </NavLink>
+              <NavLink
+                to={"/votedpolls"}
+                className={({ isActive }) =>
+                  `hover:bg-gray-700 hover:text-white text-white block rounded-md px-3 py-2 text-base font-medium focus:outline-none focus:bg-gray-700 ${
+                    isActive ? "bg-gray-700" : ""
+                  }`
+                }
+                onClick={() => setIsMobileMenu(!isMobileMenu)}
+              >
+                Voted
+              </NavLink>
+              <NavLink
+                to={"/about"}
+                className={({ isActive }) =>
+                  `hover:bg-gray-700 hover:text-white text-white block rounded-md px-3 py-2 text-base font-medium focus:outline-none focus:bg-gray-700 ${
+                    isActive ? "bg-gray-700" : ""
+                  }`
+                }
+                onClick={() => setIsMobileMenu(!isMobileMenu)}
+              >
+                About
               </NavLink>
             </div>
 
