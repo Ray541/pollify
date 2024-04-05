@@ -177,7 +177,6 @@ const Vote = () => {
 
       const unsubscribe = onSnapshot(votesQuery, (snapshot) => {
         snapshot.forEach((change) => {
-          console.log(change.data());
           setVoted(true);
         });
       });
@@ -206,7 +205,7 @@ const Vote = () => {
           </h1>
           {poll && (
             <>
-              <div className="w-full h-auto p-3 border-2 border-gray-900 bg-gray-700 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md flex flex-col gap-2">
+              <div className="w-full h-auto px-3.5 py-3.5 border-2 border-gray-900 bg-gray-700 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md flex flex-col gap-2 shadow-md shadow-[#00000093]">
                 <div className="w-full text-md lg:text-xl md:text-lg bg-gray-900 py-2 px-2 rounded-md tracking-wide flex flex-col gap-2 lg:gap-3 lg:px-3 lg:py-3">
                   <h2>Voting for Poll-Id : {pollId}</h2>
                   <h1>Poll Question : {poll.question}</h1>
@@ -230,7 +229,7 @@ const Vote = () => {
                   </Link>
                 </div>
               </div>
-              <div className="w-full h-auto p-3 border-2 border-gray-900 bg-gray-700 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md">
+              <div className="w-full h-auto px-3.5 py-3.5 border-2 border-gray-900 bg-gray-900 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md shadow-md shadow-[#00000093]">
                 <h1 className="w-full text-xl mb-3">
                   Poll Question: {poll.question}
                 </h1>
@@ -238,7 +237,9 @@ const Vote = () => {
                   {poll.options.map((option, index) => (
                     <div key={index}>
                       {currentUserVotedOption === option && voted === true ? (
-                        <p>You have voted for {option}</p>
+                        <p className="px-5 py-2 bg-white text-gray-900 rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide">
+                          You Vote 👉 {option}
+                        </p>
                       ) : (
                         <Button
                           className={
