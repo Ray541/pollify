@@ -4,17 +4,27 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import SnackBar from "../../components/SnackBar/SnackBar";
 
 const Feeds = () => {
   const [searchPoll, setSearchPoll] = useState("");
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
+
+  const showSnackbar = () => {
+    setIsSnackbarVisible(true);
+    setTimeout(() => setIsSnackbarVisible(false), 3000); // Hide after 3 seconds
+  };
+
+  const hideSnackbar = () => {
+    setIsSnackbarVisible(false);
+  };
 
   const handleSearchChange = (e) => {
     setSearchPoll(e.target.value);
@@ -64,6 +74,9 @@ const Feeds = () => {
   return (
     <section>
       <div className="max-w-7xl mx-auto flex  items-center justify-center flex-col gap-5 py-5 lg:px-8">
+        {isSnackbarVisible && (
+          <SnackBar value="Poll Deleted!" onClose={hideSnackbar} />
+        )}
         <div className="w-full flex flex-wrap items-center justify-center gap-2 sticky top-[68px] sm:justify-around lg:justify-between bg-white py-2 lg:py-3 z-10">
           <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff] sm:text-[50px]">
             Polls You Voted
@@ -82,13 +95,21 @@ const Feeds = () => {
         <div className="w-full flex items-center justify-center gap-7 flex-wrap p-5">
           {loading ? (
             <Spinner /> // Display spinner component while loading
+          ) : polls.length === 0 ? (
+            <div className="w-full min-h-auto flex flex-col items-center justify-center gap-7 mt-20 md:m-28 lg:m-28">
+              <p className="w-full text-center text-[#0088FF] text-4xl tracking-wide md:text-5xl lg:text-7xl">
+                You have not Voted to any Poll yet.
+              </p>
+            </div>
           ) : (
-            polls.map((poll) => <PollCard key={poll.id} poll={poll} />)
+            polls.map((poll) => (
+              <PollCard
+                key={poll.id}
+                poll={poll}
+                onPollDeleted={showSnackbar}
+              />
+            ))
           )}
-
-          {/* {polls.map((poll) => (
-            <PollCard key={poll.id} poll={poll} />
-          ))} */}
         </div>
       </div>
     </section>

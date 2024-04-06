@@ -12,8 +12,10 @@ const Home = () => {
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const showSnackbar = () => {
+  const showSnackbar = (message) => {
+    setSnackbarMessage(message);
     setIsSnackbarVisible(true);
     setTimeout(() => setIsSnackbarVisible(false), 3000); // Hide after 3 seconds
   };
@@ -81,23 +83,41 @@ const Home = () => {
             />
 
             {isSnackbarVisible && (
-              <SnackBar
-                value="Poll created successfully!"
-                onClose={hideSnackbar}
+              <SnackBar value={snackbarMessage} onClose={hideSnackbar} />
+            )}
+            {polls.length === 0 ? null : (
+              <Button
+                className="py-2 px-4 tracking-wider"
+                value={"Create Poll"}
+                onClick={handleCreatePole}
               />
             )}
-            <Button
-              className="py-2 px-4 tracking-wider"
-              value={"Create Poll"}
-              onClick={handleCreatePole}
-            />
           </div>
 
           <div className="w-full flex items-center justify-center gap-7 flex-wrap p-5">
             {loading ? (
               <Spinner /> // Display spinner component while loading
+            ) : polls.length === 0 ? (
+              <div className="w-full min-h-auto flex flex-col items-center justify-center gap-7 mt-20 md:m-24 lg:m-28">
+                <p className="w-full text-center text-[#0088FF] text-3xl tracking-wide md:text-5xl lg:text-7xl">
+                  You did not Create any Polls
+                </p>
+                {polls.length === 0 && (
+                  <Button
+                    className="py-2 px-4 tracking-wider"
+                    value={"Create Poll"}
+                    onClick={handleCreatePole}
+                  />
+                )}
+              </div>
             ) : (
-              polls.map((poll) => <PollCard key={poll.id} poll={poll} />)
+              polls.map((poll) => (
+                <PollCard
+                  key={poll.id}
+                  poll={poll}
+                  onPollDeleted={() => showSnackbar("Poll Deleted!")}
+                />
+              ))
             )}
           </div>
         </div>
@@ -108,7 +128,7 @@ const Home = () => {
       <CreateModal
         isOpen={isModalOpen}
         onClose={handleCreatePollClose}
-        onPollCreated={showSnackbar}
+        onPollCreated={() => showSnackbar("Poll Created!")}
       />
     </>
   );
