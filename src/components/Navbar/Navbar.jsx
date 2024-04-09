@@ -50,19 +50,21 @@ const Navbar = () => {
   const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const q = query(
-        collection(firestore, "users"),
-        where("email", "==", currentUserEmail)
-      );
+      if (currentUserEmail) {
+        const q = query(
+          collection(firestore, "users"),
+          where("email", "==", currentUserEmail)
+        );
 
-      /**Real Time Data Fetching  */
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          setUserDetails(doc.data());
+        /**Real Time Data Fetching  */
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setUserDetails(doc.data());
+          });
         });
-      });
 
-      return () => unsubscribe();
+        return () => unsubscribe();
+      }
     };
 
     fetchUserDetails();
