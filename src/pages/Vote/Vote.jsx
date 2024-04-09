@@ -238,7 +238,7 @@ const Vote = () => {
                     <div key={index}>
                       {currentUserVotedOption === option && voted === true ? (
                         <p className="px-5 py-2 bg-white text-gray-900 rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide">
-                          You Vote 👉 {option}
+                          Your Vote 👉 {option}
                         </p>
                       ) : (
                         <Button

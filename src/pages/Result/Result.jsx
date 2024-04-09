@@ -183,9 +183,12 @@ const Result = () => {
                   {poll?.options.map((option, index) => (
                     <h1
                       key={index}
-                      className={`py-2 px-5 rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide`}
+                      className={`py-2 px-5 rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide ${
+                        userVote === option && "bg-white text-gray-900"
+                      }`}
                       value={option}
                     >
+                      {userVote === option && "Your Vote 👉 "}
                       {option} [{poll.voteCounts?.[option] || 0}]
                     </h1>
                   ))}
