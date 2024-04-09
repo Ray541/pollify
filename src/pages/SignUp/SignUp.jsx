@@ -4,7 +4,7 @@ import { auth, firestore } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -36,30 +36,63 @@ const SignUp = () => {
         onSubmit={async (values, { resetForm }) => {
           try {
             // Create the user in Firebase Authentication
-            const userCredential = await createUserWithEmailAndPassword(
+            const { user } = await createUserWithEmailAndPassword(
               auth,
               values.email,
               values.password
             );
 
-            // Get the user's uid
-            const { uid } = userCredential.user;
-
             // Create a new user object with uid
             const newUser = {
-              uid: uid,
+              uid: user.uid,
               fullName: values.fullName,
               userName: values.userName,
               email: values.email,
             };
 
-            localStorage.setItem("currentUser", JSON.stringify(newUser));
-
             // Add the new user to Firestore collection 'users'
             await addDoc(collection(firestore, "users"), newUser);
 
+            localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+            if (user) {
+              localStorage.setItem("currentUser", JSON.stringify(user));
+              navigate("/");
+              resetForm();
+            }
+
+            const userId = user.uid;
+
+            /**This is used to fetch the data from the firestore collection names users
+             * Here, the uid in the users collection is compared with the user.uid which we get from the default authentication table in the firebase
+             */
+            const q = query(
+              collection(firestore, "users"),
+              where("uid", "==", userId)
+            );
+
+            /**If the collection with the user.uid exists then the user data from the firestore users collection is stored in localStorage */
+            getDocs(q)
+              .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                  const snapshot = querySnapshot.docs[0];
+
+                  localStorage.setItem(
+                    "currentUserData",
+                    JSON.stringify(snapshot.data())
+                  );
+                } else {
+                  console.log("No documents found matching the query.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error getting documents: ", error);
+              });
+
             // Show success message and navigate to sign in page
             alert("Account Created Successfully");
+
+            // Navigate to Signin page
             navigate("/signin");
 
             // Reset form fields

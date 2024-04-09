@@ -66,7 +66,7 @@ const Navbar = () => {
     };
 
     fetchUserDetails();
-  }, []);
+  }, [currentUserEmail]);
 
   return (
     <div className="min-h-full sticky top-0 z-20" ref={dropDownRef}>
