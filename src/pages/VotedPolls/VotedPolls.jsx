@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import SnackBar from "../../components/SnackBar/SnackBar";
+import SearchInput from "../../components/SearchInput/SearchInput";
 
 const Feeds = () => {
   const [searchPoll, setSearchPoll] = useState("");
@@ -81,14 +82,14 @@ const Feeds = () => {
           <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff] sm:text-[50px]">
             Polls You Voted
           </h1>
-          <input
-            className="border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900"
-            placeholder="Search Poll Ouestion...       🔍"
-            type="text"
-            name="feeds-search"
-            id="feeds-search"
+          <SearchInput
+            className={`border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900`}
+            placeholder={`Search Poll Ouestion...    🔍`}
+            type={`text`}
+            name={"feeds-search"}
+            id={"feeds-search"}
             value={searchPoll}
-            onChange={() => handleSearchChange}
+            onChange={(e) => handleSearchChange(e)}
           />
         </div>
 

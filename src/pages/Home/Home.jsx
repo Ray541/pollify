@@ -4,6 +4,7 @@ import CreateModal from "../../components/Modal/CreateModal";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase/firebase";
+import SearchInput from "../../components/SearchInput/SearchInput";
 import SnackBar from "../../components/SnackBar/SnackBar";
 
 const Home = () => {
@@ -72,14 +73,14 @@ const Home = () => {
             <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff]">
               Dashboard
             </h1>
-            <input
-              className="border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900"
-              placeholder="Search Poll Ouestion...       🔍"
-              type="text"
-              name="dashboard-search"
-              id="dashboard-search"
+            <SearchInput
+              className={`border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900`}
+              placeholder={`Search Poll Ouestion...    🔍`}
+              type={`text`}
+              name={"feeds-search"}
+              id={"feeds-search"}
               value={searchPoll}
-              onChange={handleSearchChange}
+              onChange={(e) => handleSearchChange(e)}
             />
 
             {isSnackbarVisible && (
