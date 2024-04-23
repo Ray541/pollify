@@ -9,7 +9,7 @@ const SnackBar = ({ className, value, onClose }) => {
       <div>{value}</div>
       <div
         onClick={onClose}
-        className="cursor-pointer hover:bg-white rounded-full p-1 transition-all duration-200 hover:text-gray-900"
+        className="cursor-pointer border-2 hover:bg-white rounded-full p-1 transition-all duration-200 hover:text-gray-900"
       >
         <IoClose />
       </div>

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { useEffect, useState } from "react";
 import {
@@ -22,6 +22,7 @@ const Vote = () => {
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
   const [currentUserVotedOption, setCurrentUserVotedOption] = useState(null);
   const [voted, setVoted] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPoll = async () => {
@@ -187,6 +188,10 @@ const Vote = () => {
     fetchVotes();
   }, []);
 
+  const handleResultButtonClick = () => {
+    navigate(`/result/${pollId}`);
+  };
+
   return (
     <section className="w-full min-h-[90vh] p-3 flex flex-col items-center justify-center gap-5">
       {isSnackbarVisible && (
@@ -200,38 +205,51 @@ const Vote = () => {
         <Spinner />
       ) : (
         <>
-          <h1 className="text-[35px] font-black text-gray-900 md:text-[40px] lg:text-[50px]">
+          <h1 className="text-[45px] font-black text-gray-900 md:text-[40px] lg:text-[50px]">
             Poll Voting
           </h1>
           {poll && (
             <>
               <div className="w-full h-auto px-3.5 py-3.5 border-2 border-gray-900 bg-gray-700 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md flex flex-col gap-2 shadow-md shadow-[#00000093]">
                 <div className="w-full text-md lg:text-xl md:text-lg bg-gray-900 py-2 px-2 rounded-md tracking-wide flex flex-col gap-2 lg:gap-3 lg:px-3 lg:py-3">
-                  <h2>Voting for Poll-Id : {pollId}</h2>
-                  <h1>Poll Question : {poll.question}</h1>
+                  <h2 className="text-[17px] md:text-lg">
+                    Voting for Poll-Id :
+                    <p className="text-sm md:text-[15px]">{pollId}</p>
+                  </h2>
+                  <h1 className="text-[17px] md:text-lg">
+                    Poll Question :{" "}
+                    <p className="text-sm md:text-[15px]">{poll.question}</p>
+                  </h1>
                 </div>
                 <div className="w-full text-md lg:text-xl md:text-lg bg-gray-900 py-2 px-2 rounded-md tracking-wide flex flex-col gap-1 lg:gap-3 lg:px-3 lg:py-3">
-                  <h3>
+                  <h3 className="text-[17px] md:text-lg">
                     Poll Created At:{" "}
-                    {poll?.createdAt?.toDate().toLocaleString()}
+                    <span className="text-sm md:text-[15px]">
+                      {poll?.createdAt?.toDate().toLocaleString()}
+                    </span>
                   </h3>
-                  <h3>Poll Created By: {poll.createdBy}</h3>
+                  <h3 className="text-[17px] md:text-lg">
+                    Poll Created By:{" "}
+                    <span className="text-sm md:text-[15px]">
+                      {poll.createdBy}
+                    </span>
+                  </h3>
                 </div>
                 <div className="mt-2">
-                  <Link
-                    to={`/result/${pollId}`}
+                  <Button
                     className={
                       "px-5 py-2 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none"
                     }
                     value={"Poll Results"}
-                  >
-                    Poll Results
-                  </Link>
+                    onClick={handleResultButtonClick}
+                  />
                 </div>
               </div>
+
               <div className="w-full h-auto px-3.5 py-3.5 border-2 border-gray-900 bg-gray-900 text-gray-300 lg:w-1/3 md:w-1/2 rounded-md shadow-md shadow-[#00000093]">
-                <h1 className="w-full text-xl mb-3">
-                  Poll Question: {poll.question}
+                <h1 className="w-full text-xl mb-3 bg-gray-700 p-2 rounded-md">
+                  Poll Question:{" "}
+                  <span className="text-lg">{poll.question}</span>
                 </h1>
                 <div className="flex flex-col items-start justify-start gap-3">
                   {poll.options.map((option, index) => (

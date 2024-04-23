@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase/firebase";
@@ -9,6 +9,7 @@ const Result = () => {
   const [poll, setPoll] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userVote, setUserVote] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPoll = async () => {
@@ -108,6 +109,10 @@ const Result = () => {
     }
   }, [loading, poll]);
 
+  const handleVoteButtonClick = () => {
+    navigate(`/vote/${pollId}`);
+  };
+
   return (
     <section className="w-full min-h-[90vh] p-3 flex flex-col items-center justify-center gap-5">
       {loading ? (
@@ -118,42 +123,45 @@ const Result = () => {
             Poll Result
           </h1>
           <div className="h-auto flex flex-col flex-wrap items-center justify-center md:flex-row lg:flex-row gap-5">
-            <div className="flex items-center flex-wrap justify-center flex-col gap-5 lg:gap-5">
-              <div className="shadow-md shadow-[#00000093] w-full md:w-full lg:w-full text-md lg:text-md md:text-lg bg-gray-600 py-2 px-2 rounded-md tracking-wide border-2 border-gray-900 lg:p-5 flex flex-col gap-1">
-                <div className="bg-gray-900 w-full text-md lg:text-xl md:text-lg rounded-md tracking-wide py-1.5 px-1.5">
-                  <h2 className="text-[white] font-bold">
-                    Poll Question:
-                    <span className="text-[#0088FF] text-[17px]">
+            <div className="md:w-1/2 flex items-center flex-wrap justify-center flex-col gap-5 lg:gap-5">
+              <div className="shadow-md shadow-[#00000093] w-full md:w-full lg:w-full text-md lg:text-md md:text-lg bg-gray-600 py-2 px-2 rounded-md tracking-wide border-2 border-gray-900 lg:p-5 flex flex-col gap-3">
+                <div className="bg-gray-900 w-full text-md lg:text-xl md:text-lg rounded-md tracking-wide p-2">
+                  <h2 className="text-gray-100 font-bold tracking-wide">
+                    Poll Question:{" "}
+                    <span className="text-[#0088FF] text-[17px] font-normal">
                       {poll?.question}
                     </span>
                   </h2>
                 </div>
-                <div className="mt-2.5 px-1.5 text-[silver] font-bold">
-                  Poll Created By:{" "}
-                  <span className="text-[#0088FF] font-normal">
-                    {poll?.createdBy}
-                  </span>
-                </div>
-                <div className="mb-3 px-1.5 text-[silver] font-bold">
-                  Poll Created At:{" "}
-                  <span className="text-[#0088FF] font-normal text-sm">
-                    {poll?.createdAt?.toDate().toLocaleString()}
-                  </span>
+                <div className="bg-gray-800 rounded-md p-1">
+                  <div className="mt-2.5 px-1.5 text-gray-100 font-bold">
+                    Poll Created By:{" "}
+                    <span className="text-[#0088FF] font-normal">
+                      {poll?.createdBy}
+                    </span>
+                  </div>
+                  <div className="mb-3 px-1.5 text-gray-100 font-bold">
+                    Poll Created At:{" "}
+                    <span className="text-[#0088FF] font-normal text-sm">
+                      {poll?.createdAt?.toDate().toLocaleString()}
+                    </span>
+                  </div>
                 </div>
                 <div>
-                  <Link
-                    to={`/vote/${pollId}`}
+                  <Button
                     className={
                       "px-5 py-2 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none"
                     }
-                    value={"Poll Results"}
+                    value={"Poll Vote"}
+                    onClick={handleVoteButtonClick}
                   >
                     Poll Voting
-                  </Link>
+                  </Button>
                 </div>
               </div>
+
               <div className="shadow-md shadow-[#00000093] w-full md:w-full lg:w-full text-md lg:text-md md:text-lg bg-gray-900 py-2 px-2 rounded-md tracking-wide border-2 border-gray-900 lg:p-5 text-white">
-                <h1 className="w-full text-2xl mb-3 md:text-2xl bg-gray-600 rounded-md p-1.5">
+                <h1 className="w-full text-2xl mb-3 md:text-2xl bg-gray-600 rounded-md p-2">
                   Poll Options
                 </h1>
                 <div className="flex flex-col items-start justify-start gap-3">
@@ -162,9 +170,9 @@ const Result = () => {
                       key={index}
                       className={`py-2 px-5 ${
                         userVote === option
-                          ? "bg-white text-gray-900"
-                          : "bg-gray-600"
-                      } rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide`}
+                          ? "bg-gray-100 text-gray-900"
+                          : "border-2 border-gray-100"
+                      } rounded-md transition-all duration-200 tracking-wide`}
                       value={option}
                     >
                       {userVote === option && "Your Vote 👉 "}
@@ -174,17 +182,20 @@ const Result = () => {
                 </div>
               </div>
             </div>
+
             <div className="flex items-center flex-wrap justify-center flex-col gap-5 lg:gap-5">
               <div className="shadow-md shadow-[#00000093] w-full md:w-full lg:w-full text-md lg:text-md md:text-lg bg-gray-900 py-2 px-2 rounded-md tracking-wide border-2 border-gray-900 lg:p-5 text-white">
-                <h1 className="w-full text-2xl mb-3 md:text-2xl bg-gray-600 rounded-md p-1.5">
+                <h1 className="w-full text-2xl mb-3 md:text-2xl bg-gray-600 rounded-md p-2">
                   Total Votes
                 </h1>
                 <div className="flex flex-col items-start justify-start gap-3">
                   {poll?.options.map((option, index) => (
                     <h1
                       key={index}
-                      className={`py-2 px-5 rounded-md hover:bg-white hover:text-gray-600 transition-all duration-200 tracking-wide ${
-                        userVote === option && "bg-white text-gray-900"
+                      className={`py-2 px-5 rounded-md transition-all duration-200 tracking-wide ${
+                        userVote === option
+                          ? "bg-gray-100 text-gray-900"
+                          : "border-2 border-gray-100"
                       }`}
                       value={option}
                     >

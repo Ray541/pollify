@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { AiFillDelete } from "react-icons/ai";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 import { BiListPlus } from "react-icons/bi";
 import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { addDoc, collection } from "firebase/firestore";
 import { firestore, auth } from "../../firebase/firebase";
+import Button from "../Button/Button";
+
+const deleteIcon = <RiDeleteBin5Fill className="text-lg lg:text-2xl" />;
 
 const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -85,8 +88,8 @@ const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
 
   return (
     <section className="w-full min-h-screen fixed top-0 flex items-center justify-center text-white bg-[#00000069] z-50">
-      <div className="w-full mx-5 p-3 rounded-xl h-auto bg-gray-600 md:w-1/2 lg:w-1/3 flex flex-col gap-3">
-        <div className="flex justify-between">
+      <div className="w-full mx-5 p-3 lg:py-10 rounded-xl h-auto bg-gray-600 md:w-1/2 lg:w-1/3 flex flex-col gap-3">
+        <div className="flex justify-between md:px-10">
           <h1 className="text-[1.75rem] tracking-wide">Create a Poll</h1>
           <button
             className={
@@ -133,20 +136,21 @@ const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
                         <div className="flex gap-2">
                           <Field
                             className={
-                              "w-full mt-1 p-1 text-gray-900 rounded-sm focus:outline-none focus:border-2 focus:border-gray-900 border-transparent border-2"
+                              "w-full mt-1 p-1 text-gray-900 rounded-md focus:outline-none focus:border-2 focus:border-gray-900 border-transparent border-2"
                             }
                             name={`options.${index}`}
                             type="text"
                             placeholder="Type option"
                           />
                           {values.options.length > 2 && (
-                            <button
-                              className="hover:text-red-500 focus:text-red-500 focus:outline-none"
-                              type="button"
-                              onClick={() => remove(index)}
-                            >
-                              <AiFillDelete />
-                            </button>
+                            <>
+                              <Button
+                                className="hover:text-red-500 focus:text-red-500 focus:outline-none transition-all duration-75 ease-linear"
+                                type={"button"}
+                                value={deleteIcon}
+                                onClick={() => remove(index)}
+                              />{" "}
+                            </>
                           )}
                         </div>
                         <ErrorMessage
@@ -169,12 +173,11 @@ const CreateModal = ({ isOpen, onClose, onPollCreated }) => {
                 )}
               </FieldArray>
 
-              <button
-                className="py-1 rounded-md bg-[#0088FF] w-full focus:outline-none focus:bg-gray-900 hover:bg-gray-900 transition-all duration-200"
+              <Button
+                className="py-2 rounded-md bg-[#0088FF] w-full focus:outline-none focus:bg-gray-900 hover:bg-gray-900 transition-all duration-200"
                 type="submit"
-              >
-                Create Poll
-              </button>
+                value={"Create Poll"}
+              />
             </Form>
           )}
         </Formik>

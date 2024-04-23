@@ -98,7 +98,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/"}
                     className={({ isActive }) =>
-                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
@@ -109,7 +109,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/feeds"}
                     className={({ isActive }) =>
-                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
@@ -119,7 +119,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/votedpolls"}
                     className={({ isActive }) =>
-                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
@@ -129,7 +129,7 @@ const Navbar = () => {
                   <NavLink
                     to={"/about"}
                     className={({ isActive }) =>
-                      `hover:bg-[#0088FF] hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
+                      `hover:bg-gray-700 hover:text-white text-white rounded-md px-3 py-2 text-sm font-medium focus:outline-none text-[16px] tracking-wider transition-all duration-200 ${
                         isActive ? "bg-gray-700 hover:bg-gray-700" : ""
                       }`
                     }
@@ -149,7 +149,6 @@ const Navbar = () => {
                     onClick={() => setIsProfile(!isProfile)}
                   >
                     <button
-                      type="button"
                       className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:bg-gray-700"
                       id="user-menu-button"
                       aria-expanded="false"
@@ -169,21 +168,11 @@ const Navbar = () => {
                           : "Loading..."}
                         {userDetails?.userName ? userDetails?.userName : ""}
                       </span>
-                      <span className="text-[gray] font-normal hover:text-white cursor-pointer text-sm tracking-widest">
+                      <span className="text-[gray] font-normal hover:text-white cursor-pointer text-sm tracking-widest transition-all duration-75 ease-linear">
                         {currentUserEmail ? currentUserEmail : ""}
                       </span>
                     </div>
                   </div>
-
-                  {/*               
-                Dropdown menu, show/hide based on menu state.
-
-                Entering: "transition ease-out duration-100"
-                  From: "transform opacity-0 scale-95"
-                  To: "transform opacity-100 scale-100"
-                Leaving: "transition ease-in duration-75"
-                  From: "transform opacity-100 scale-100"
-                  To: "transform opacity-0 scale-95" */}
 
                   {isProfile && (
                     <div
@@ -236,7 +225,11 @@ const Navbar = () => {
                 <span className="absolute -inset-0.5"></span>
                 {/* Menu Open SVG */}
                 <svg
-                  className={`${isMobileMenu ? "hidden" : "block"} h-6 w-6`}
+                  className={`${
+                    isMobileMenu
+                      ? "hidden"
+                      : "block transition-all duration-75 ease-linear"
+                  } h-6 w-6`}
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
@@ -252,7 +245,11 @@ const Navbar = () => {
 
                 {/* Menu Close SVG */}
                 <svg
-                  className={`${isMobileMenu ? "block" : "hidden"} h-6 w-6`}
+                  className={`${
+                    isMobileMenu
+                      ? "block transition-all duration-75 ease-linear"
+                      : "hidden"
+                  } h-6 w-6`}
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
@@ -332,13 +329,15 @@ const Navbar = () => {
                 </div>
                 <div className="ml-3 flex flex-col gap-1.5">
                   <div className="flex flex-col gap-0.5 text-base font-medium leading-none text-white">
-                    <span>
+                    <span className="text-sm tracking-wider">
                       {userDetails?.fullName
                         ? userDetails?.fullName + " | "
                         : "Loading..."}
                       {userDetails?.userName ? userDetails?.userName : ""}
                     </span>
-                    <span>{currentUserEmail ? currentUserEmail : ""}</span>
+                    <span className="text-[gray] font-normal hover:text-white cursor-pointer text-xs tracking-wider transition-all duration-75 ease-linear">
+                      {currentUserEmail ? currentUserEmail : ""}
+                    </span>
                   </div>
                 </div>
               </div>

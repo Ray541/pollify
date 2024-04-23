@@ -70,11 +70,11 @@ const Home = () => {
       <section className="w-full">
         <div className="max-w-7xl mx-auto flex items-center justify-center flex-col gap-5 py-5 lg:px-8">
           <div className="w-full flex flex-wrap items-center justify-center gap-2 sticky top-[68px] sm:justify-around lg:justify-between bg-white py-2 lg:py-3 z-10">
-            <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff]">
+            <h1 className="text-5xl md:text-[45px] lg:text-[60px] font-black text-[#2b00ff]">
               Dashboard
             </h1>
             <SearchInput
-              className={`border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900`}
+              className={`mt-5 border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900 md:mt-0`}
               placeholder={`Search Poll Ouestion...    🔍`}
               type={`text`}
               name={"feeds-search"}
@@ -88,7 +88,7 @@ const Home = () => {
             )}
             {polls.length === 0 ? null : (
               <Button
-                className="py-2 px-4 tracking-wider"
+                className="py-2 px-4 cursor-pointer rounded-lg bg-[#2B00FF] hover:bg-gray-800 text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-nonetracking-wider"
                 value={"Create Poll"}
                 onClick={handleCreatePole}
               />

@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FaUserPlus } from "react-icons/fa6";
 import { auth, firestore } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import Button from "../../components/Button/Button";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -103,12 +103,14 @@ const SignUp = () => {
         }}
       >
         <Form className="w-full p-5 bg-white border-2 border-gray-700 text-gray-700 flex flex-col gap-4 md:w-1/2 md:py-5 md:px-7 lg:w-1/3 rounded-xl">
-          <h1 className="w-full text-4xl font-extrabold flex items-center justify-center gap-2">
-            Sign Up
-            <FaUserPlus />
+          <h1 className="w-full text-4xl md:text-5xl lg:tracking-wider font-black flex items-center justify-center gap-2">
+            Sign Up 🆕
           </h1>
           <div className="flex flex-col gap-2">
-            <label className="text-md tracking-wider" htmlFor="full-name">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="full-name"
+            >
               Full Name
             </label>
             <Field
@@ -125,7 +127,10 @@ const SignUp = () => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-md tracking-wider" htmlFor="username">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="username"
+            >
               Username
             </label>
             <Field
@@ -142,7 +147,10 @@ const SignUp = () => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-md tracking-wider" htmlFor="email">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="email"
+            >
               Email
             </label>
             <Field
@@ -154,13 +162,16 @@ const SignUp = () => {
             />
             <ErrorMessage className="text-black" name="email" component="div" />
           </div>
-          <div className="flex flex-col">
-            <label className="text-md tracking-wider" htmlFor="password">
+          <div className="flex flex-col gap-2">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="password"
+            >
               Password
             </label>
             <Field
               className="w-full border-2 border-gray-500  rounded-sm p-1 text-[black] outline-none focus:border-black"
-              type="password"
+              type="text"
               name="password"
               id="password"
               placeholder="Password...🔑"
@@ -174,18 +185,17 @@ const SignUp = () => {
           <p className="w-full text-center tracking-wide">
             Have an Account?{" "}
             <Link
-              to={"/signin"}
               className="font-bold tracking-normal text-[#0088FF] text-[20px] hover:text-[#2B00FF] focus:outline-none focus:text-[#2B00FF]"
+              to={"/signin"}
             >
               Sign In
             </Link>
           </p>
-          <button
+          <Button
             type="submit"
             className="py-1 cursor-pointer rounded-md bg-[#0088FF] hover:bg-[#2B00FF] text-white text-[17px] transition-all duration-200 focus:bg-[#2B00FF] focus:outline-none"
-          >
-            Sign Up
-          </button>
+            value={"Sign Up"}
+          />
         </Form>
       </Formik>
     </div>

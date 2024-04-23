@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { IoLogIn } from "react-icons/io5";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -84,15 +83,18 @@ const SignIn = () => {
         }}
       >
         <Form className="w-full p-5 border-2 bg-white border-gray-700 text-gray-700 flex flex-col gap-4 md:w-1/2 md:py-5 md:px-7 lg:w-1/3 rounded-xl">
-          <h1 className="w-full text-4xl font-extrabold flex items-center justify-center gap-2">
-            Sign In <IoLogIn />
+          <h1 className="w-full text-4xl md:text-5xl lg:tracking-wider font-black flex items-center justify-center gap-2">
+            Sign In 🔐
           </h1>
           <div className="flex flex-col gap-2">
-            <label className="text-md tracking-wider" htmlFor="email">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="email"
+            >
               Email
             </label>
             <Field
-              className="w-full border-2 border-gray-400  rounded-sm p-1 text-[black] outline-none focus:border-black"
+              className="w-full border-2 border-gray-400  rounded-md p-1 text-[black] outline-none focus:border-black"
               type="email"
               id="email"
               name="email"
@@ -100,12 +102,15 @@ const SignIn = () => {
             />
             <ErrorMessage className="text-black" name="email" component="div" />
           </div>
-          <div className="flex flex-col">
-            <label className="text-md tracking-wider" htmlFor="password">
+          <div className="flex flex-col gap-2">
+            <label
+              className="text-md font-semibold tracking-wider"
+              htmlFor="password"
+            >
               Password
             </label>
             <Field
-              className="w-full border-2 border-gray-400  rounded-sm p-1 text-[black] outline-none focus:border-black"
+              className="w-full border-2 border-gray-400  rounded-md p-1 text-[black] outline-none focus:border-black"
               type="password"
               id="password"
               name="password"
@@ -118,16 +123,16 @@ const SignIn = () => {
             />
           </div>
           <Link
-            to={"/forgot-password"}
             className="w-full text-lg text-center font-bold hover:text-[#0088FF] tracking-wide transition-all duration-100 focus:outline-none focus:text-[#0088FF]"
+            to={"/forgot-password"}
           >
             Forgot Password?
           </Link>
           <p className="w-full text-center tracking-wide">
             Don't have an Account?{" "}
             <Link
-              to={"/signup"}
               className="font-bold tracking-normal text-[#0088FF] text-[20px] hover:text-[#2B00FF] focus:outline-none focus:text-[#2B00FF]"
+              to={"/signup"}
             >
               Sign Up
             </Link>

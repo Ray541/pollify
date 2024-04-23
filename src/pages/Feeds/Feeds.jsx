@@ -55,11 +55,11 @@ const Feeds = () => {
           <SnackBar value="Poll Deleted!" onClose={hideSnackbar} />
         )}
         <div className="w-full flex flex-wrap items-center justify-center gap-2 sticky top-[68px] sm:justify-around lg:justify-between bg-white py-2 lg:py-3 z-10">
-          <h1 className="text-3xl md:text-[40px] lg:text-[50px] font-bold text-[#2b00ff] sm:text-[50px]">
+          <h1 className="text-5xl md:text-[45px] lg:text-[60px] font-black text-[#2b00ff] sm:text-[50px]">
             Feeds
           </h1>
           <SearchInput
-            className={`border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900`}
+            className={`mt-5 md:mt-0 border-2 border-gray-400 rounded-[5px] outline-none px-2 py-1 placeholder:text-gray-400 focus:border-gray-900`}
             placeholder={`Search Poll Ouestion...    🔍`}
             type={`text`}
             name={"feeds-search"}
