@@ -28,7 +28,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", "font-sans", figtree.variable)}
     >
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
