@@ -127,3 +127,15 @@
     @apply font-sans;
     }
 }
+
+@layer components {
+  .bg-auth-sign-up {
+    @apply bg-linear-to-br from-primary/35 via-primary/10 to-primary/25 dark:from-primary/80 dark:via-primary/40 dark:to-background;
+  }
+  .bg-auth-login {
+    @apply bg-linear-to-bl from-primary/35 via-primary/10 to-primary/25 dark:from-primary/80 dark:via-primary/40 dark:to-background;
+  }
+  .bg-auth-grid {
+    @apply bg-[linear-gradient(to_right,var(--primary)_1px,transparent_1px),linear-gradient(to_bottom,var(--primary)_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.05] dark:opacity-30;
+  }
+}
