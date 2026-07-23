@@ -20,7 +20,7 @@ export default function ProfileCard() {
     .toUpperCase()
 
   return (
-    <Card className="overflow-hidden border border-primary/30">
+    <Card className="overflow-hidden border border-primary/50">
       <CardContent className="flex flex-col items-center justify-center gap-5">
         <CardHeader className="w-full p-0">
           <div className="flex w-full items-center justify-center border-b border-primary/30 pb-5">

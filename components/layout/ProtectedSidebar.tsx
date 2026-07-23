@@ -52,7 +52,7 @@ export default function ProtectedSidebar() {
             />
             <SheetContent
               side="left"
-              className="flex w-[280px] flex-col justify-between p-5"
+              className="flex w-70 flex-col justify-between p-5"
             >
               <div className="flex flex-col gap-8">
                 <Link href="/dashboard" className="flex items-center gap-2">
